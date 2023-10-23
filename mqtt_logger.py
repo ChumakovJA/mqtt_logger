@@ -2,7 +2,7 @@ import configparser
 
 import paho.mqtt.client as mqtt
 import sqlite3
-from time import time
+
 
 import pathlib
 
@@ -17,7 +17,7 @@ def on_message(mqtt_client, user_data, message):
     payload = message.payload.decode('utf-8')
     if(message.topic != 'ESP_Easy/status' ):
         db_conn = user_data['db_conn']
-        sql = 'INSERT INTO sensors_data (topic, payload) VALUES (?, ?)'
+        sql = 'INSERT INTO sensors_data (topic, value) VALUES (?, ?)'
         cursor = db_conn.cursor()
         cursor.execute(sql, (message.topic, payload))
         db_conn.commit()
@@ -36,8 +36,8 @@ def main():
     CREATE TABLE IF NOT EXISTS sensors_data (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         topic TEXT NOT NULL,
-        payload TEXT NOT NULL,
-        created_at DATE DEFAULT (datetime('now','localtime'))
+        value DECIMAL(10,2) NOT NULL,
+        ts DATE DEFAULT (datetime('now','localtime'))
     )
     """
     cursor = db_conn.cursor()
