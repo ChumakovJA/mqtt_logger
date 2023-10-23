@@ -13,6 +13,7 @@ def on_connect(mqtt_client, user_data, flags, conn_result):
     mqtt_client.subscribe(TOPIC)
 
 
+
 def on_message(mqtt_client, user_data, message):
     payload = message.payload.decode('utf-8')
     if(message.topic != 'ESP_Easy/status' ):
